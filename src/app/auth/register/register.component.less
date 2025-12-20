@@ -49,6 +49,14 @@
   }
 }
 
+.grid--thirds {
+  grid-template-columns: 1fr;
+
+  @media (min-width: 720px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -80,7 +88,10 @@
 
 input[type='text'],
 input[type='email'],
-input[type='password'] {
+input[type='password'],
+input[type='date'],
+input[type='tel'],
+select {
   border: 1px solid @border;
   border-radius: 10px;
   padding: 0.75rem 0.85rem;
@@ -105,6 +116,31 @@ input[type='password'] {
 .field__hint {
   font-size: 0.9rem;
   color: @danger;
+}
+
+.section-heading {
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+  color: @heading;
+}
+
+.alert {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+
+  &--success {
+    background: fade(@accent, 10%);
+    border-color: fade(@accent, 35%);
+    color: darken(@accent, 15%);
+  }
+
+  &--error {
+    background: fade(@danger, 10%);
+    border-color: fade(@danger, 35%);
+    color: darken(@danger, 10%);
+  }
 }
 
 .button {
