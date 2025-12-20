@@ -1,0 +1,47 @@
+<div class="grid grid--thirds">
+  <label class="field">
+    <span class="field__label">Country code</span>
+    <input
+      type="text"
+      formControlName="phoneCountryCode"
+      placeholder="+1"
+      autocomplete="tel-country-code"
+      [class.invalid]="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.hasError('required')">
+      Country code is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.hasError('pattern')">
+      Use a plus sign followed by 1-4 digits.
+    </span>
+  </label>
+
+  <label class="field">
+    <span class="field__label">Phone number</span>
+    <input
+      type="tel"
+      formControlName="phoneNumber"
+      placeholder="2025550123"
+      autocomplete="tel-national"
+      [class.invalid]="form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.phoneNumber.touched && form.controls.phoneNumber.hasError('required')">
+      Phone number is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.phoneNumber.touched && form.controls.phoneNumber.hasError('pattern')">
+      Use digits only (6-15 digits).
+    </span>
+  </label>
+
+  <label class="field">
+    <span class="field__label">Preferred language</span>
+    <select
+      formControlName="preferredLanguage"
+      [class.invalid]="form.controls.preferredLanguage.touched && form.controls.preferredLanguage.invalid"
+    >
+      <option *ngFor="let lang of languageOptions" [value]="lang">
+        {{ lang }}
+      </option>
+    </select>
+  </label>
+</div>
