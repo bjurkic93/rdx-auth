@@ -1,0 +1,68 @@
+<h2 class="section-heading">Personal information</h2>
+<div class="grid">
+  <label class="field">
+    <span class="field__label">First name</span>
+    <input
+      type="text"
+      formControlName="firstName"
+      placeholder="Alex"
+      autocomplete="given-name"
+      [class.invalid]="form.controls.firstName.touched && form.controls.firstName.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.firstName.touched && form.controls.firstName.hasError('required')">
+      Your first name is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.firstName.touched && form.controls.firstName.hasError('minlength')">
+      Please enter at least 2 characters.
+    </span>
+  </label>
+
+  <label class="field">
+    <span class="field__label">Last name</span>
+    <input
+      type="text"
+      formControlName="lastName"
+      placeholder="Johnson"
+      autocomplete="family-name"
+      [class.invalid]="form.controls.lastName.touched && form.controls.lastName.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.lastName.touched && form.controls.lastName.hasError('required')">
+      Your last name is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.lastName.touched && form.controls.lastName.hasError('minlength')">
+      Please enter at least 2 characters.
+    </span>
+  </label>
+
+  <label class="field">
+    <span class="field__label">Email address</span>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="alex.johnson@example.com"
+      autocomplete="email"
+      [class.invalid]="form.controls.email.touched && form.controls.email.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.email.touched && form.controls.email.hasError('required')">
+      Email is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.email.touched && form.controls.email.hasError('email')">
+      Enter a valid email address.
+    </span>
+  </label>
+</div>
+
+<div class="grid">
+  <label class="field">
+    <span class="field__label">Date of birth</span>
+    <input
+      type="date"
+      formControlName="dateOfBirth"
+      autocomplete="bday"
+      [class.invalid]="form.controls.dateOfBirth.touched && form.controls.dateOfBirth.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.dateOfBirth.touched && form.controls.dateOfBirth.hasError('required')">
+      Date of birth is required.
+    </span>
+  </label>
+</div>

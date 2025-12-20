@@ -1,0 +1,36 @@
+<h2 class="section-heading">Security</h2>
+<div class="grid">
+  <label class="field">
+    <span class="field__label">Password</span>
+    <input
+      type="password"
+      formControlName="password"
+      placeholder="••••••••"
+      autocomplete="new-password"
+      [class.invalid]="form.controls.password.touched && form.controls.password.invalid"
+    />
+    <span class="field__hint" *ngIf="form.controls.password.touched && form.controls.password.hasError('required')">
+      Password is required.
+    </span>
+    <span class="field__hint" *ngIf="form.controls.password.touched && form.controls.password.hasError('minlength')">
+      Use at least 8 characters.
+    </span>
+  </label>
+
+  <label class="field">
+    <span class="field__label">Confirm password</span>
+    <input
+      type="password"
+      formControlName="confirmPassword"
+      placeholder="••••••••"
+      autocomplete="new-password"
+      [class.invalid]="(form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid) || passwordsMismatch"
+    />
+    <span class="field__hint" *ngIf="form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')">
+      Please confirm your password.
+    </span>
+    <span class="field__hint" *ngIf="passwordsMismatch">
+      Passwords must match.
+    </span>
+  </label>
+</div>
