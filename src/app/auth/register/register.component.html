@@ -1,0 +1,94 @@
+<section class="card">
+  <div class="card__header">
+    <h1>Create your account</h1>
+    <p>Start securing your sessions with a dedicated RDX Auth profile.</p>
+  </div>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="form">
+    <div class="grid">
+      <label class="field">
+        <span class="field__label">Full name</span>
+        <input
+          type="text"
+          formControlName="fullName"
+          placeholder="Alex Johnson"
+          autocomplete="name"
+          [class.invalid]="registerForm.controls.fullName.touched && registerForm.controls.fullName.invalid"
+        />
+        <span class="field__hint" *ngIf="registerForm.controls.fullName.touched && registerForm.controls.fullName.hasError('required')">
+          Your name is required.
+        </span>
+        <span class="field__hint" *ngIf="registerForm.controls.fullName.touched && registerForm.controls.fullName.hasError('minlength')">
+          Please enter at least 3 characters.
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Email address</span>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="alex.johnson@example.com"
+          autocomplete="email"
+          [class.invalid]="registerForm.controls.email.touched && registerForm.controls.email.invalid"
+        />
+        <span class="field__hint" *ngIf="registerForm.controls.email.touched && registerForm.controls.email.hasError('required')">
+          Email is required.
+        </span>
+        <span class="field__hint" *ngIf="registerForm.controls.email.touched && registerForm.controls.email.hasError('email')">
+          Enter a valid email address.
+        </span>
+      </label>
+    </div>
+
+    <div class="grid">
+      <label class="field">
+        <span class="field__label">Password</span>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [class.invalid]="registerForm.controls.password.touched && registerForm.controls.password.invalid"
+        />
+        <span class="field__hint" *ngIf="registerForm.controls.password.touched && registerForm.controls.password.hasError('required')">
+          Password is required.
+        </span>
+        <span class="field__hint" *ngIf="registerForm.controls.password.touched && registerForm.controls.password.hasError('minlength')">
+          Use at least 8 characters.
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Confirm password</span>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="••••••••"
+          autocomplete="new-password"
+          [class.invalid]="(registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) || passwordsMismatch"
+        />
+        <span class="field__hint" *ngIf="registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.hasError('required')">
+          Please confirm your password.
+        </span>
+        <span class="field__hint" *ngIf="passwordsMismatch">
+          Passwords must match.
+        </span>
+      </label>
+    </div>
+
+    <label class="field field--checkbox">
+      <input type="checkbox" formControlName="termsAccepted" />
+      <span>
+        I agree to the <a href="#" rel="noopener">Terms of Service</a> and <a href="#" rel="noopener">Privacy Policy</a>.
+      </span>
+    </label>
+    <span class="field__hint" *ngIf="registerForm.controls.termsAccepted.touched && registerForm.controls.termsAccepted.hasError('requiredTrue')">
+      You must accept the terms to continue.
+    </span>
+
+    <button type="submit" class="button" [disabled]="registerForm.invalid || passwordsMismatch">
+      Create account
+    </button>
+  </form>
+</section>
