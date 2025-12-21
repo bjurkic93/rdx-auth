@@ -39,8 +39,8 @@
       formControlName="preferredLanguage"
       [class.invalid]="form.controls.preferredLanguage.touched && form.controls.preferredLanguage.invalid"
     >
-      <option *ngFor="let lang of languageOptions" [value]="lang">
-        {{ lang }}
+      <option *ngFor="let lang of languageOptions" [value]="lang.value">
+        {{ lang.label }} ({{ lang.value.toUpperCase() }})
       </option>
     </select>
   </label>

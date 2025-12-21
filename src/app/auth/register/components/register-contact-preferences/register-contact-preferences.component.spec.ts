@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RegisterContactPreferencesComponent } from './register-contact-preferences.component';
-import { RegisterFormGroup } from '../../register.types';
+import { LanguageOption, RegisterFormGroup } from '../../register.types';
 
 describe('RegisterContactPreferencesComponent', () => {
   let component: RegisterContactPreferencesComponent;
@@ -35,7 +35,11 @@ describe('RegisterContactPreferencesComponent', () => {
     fixture = TestBed.createComponent(RegisterContactPreferencesComponent);
     component = fixture.componentInstance;
     component.form = form;
-    component.languageOptions = ['EN', 'ES'];
+    const languageOptions: LanguageOption[] = [
+      { label: 'English', value: 'en' },
+      { label: 'Spanish', value: 'es' }
+    ];
+    component.languageOptions = languageOptions;
     fixture.detectChanges();
   });
 

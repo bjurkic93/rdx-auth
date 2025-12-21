@@ -42,3 +42,8 @@ export type CreateUserRequest = {
 export type UserResponse = {
   id: string;
 };
+
+export type LanguageOption = {
+  value: string;
+  label: string;
+};
