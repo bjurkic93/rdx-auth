@@ -17,7 +17,6 @@ describe('RegisterPersonalInfoComponent', () => {
       phoneCountryCode: fb.nonNullable.control(''),
       phoneNumber: fb.nonNullable.control(''),
       dateOfBirth: fb.nonNullable.control(''),
-      preferredLanguage: fb.nonNullable.control(''),
       addressLine1: fb.nonNullable.control(''),
       addressLine2: fb.nonNullable.control(''),
       city: fb.nonNullable.control(''),

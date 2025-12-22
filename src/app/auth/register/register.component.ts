@@ -8,7 +8,7 @@ import { RegisterContactPreferencesComponent } from './components/register-conta
 import { RegisterPersonalInfoComponent } from './components/register-personal-info/register-personal-info.component';
 import { RegisterSecurityComponent } from './components/register-security/register-security.component';
 import { RegisterTermsComponent } from './components/register-terms/register-terms.component';
-import { CreateUserRequest, LanguageOption, RegisterFormGroup } from './register.types';
+import { CreateUserRequest, RegisterFormGroup } from './register.types';
 
 @Component({
   selector: 'app-register',
@@ -33,14 +33,6 @@ export class RegisterComponent {
   successMessage = '';
   errorMessage = '';
 
-  readonly languageOptions: LanguageOption[] = [
-    { value: 'en', label: 'English' },
-    { value: 'es', label: 'Spanish' },
-    { value: 'fr', label: 'French' },
-    { value: 'de', label: 'German' }
-  ];
-  readonly defaultLanguage = this.languageOptions[0].value;
-
   readonly registerForm: RegisterFormGroup = this.fb.nonNullable.group({
     firstName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
     lastName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
@@ -48,7 +40,6 @@ export class RegisterComponent {
     phoneCountryCode: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^[+][0-9]{1,4}$/)]),
     phoneNumber: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{6,15}$/)]),
     dateOfBirth: this.fb.nonNullable.control('', [Validators.required]),
-    preferredLanguage: this.fb.nonNullable.control(this.defaultLanguage, [Validators.required]),
     addressLine1: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
     addressLine2: this.fb.nonNullable.control(''),
     city: this.fb.nonNullable.control('', [Validators.required]),
@@ -94,8 +85,7 @@ export class RegisterComponent {
         addressLine2: formValue.addressLine2 || undefined,
         postcode: formValue.postcode
       },
-      dateOfBirth: formValue.dateOfBirth,
-      preferredLanguage: formValue.preferredLanguage
+      dateOfBirth: formValue.dateOfBirth
     };
 
     this.isSubmitting = true;
@@ -106,7 +96,6 @@ export class RegisterComponent {
         tap(() => {
           this.successMessage = 'Account created successfully. Check your inbox for verification steps.';
           this.registerForm.reset({
-            preferredLanguage: this.defaultLanguage,
             termsAccepted: false
           });
         }),
