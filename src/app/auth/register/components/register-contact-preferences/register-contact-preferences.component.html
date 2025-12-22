@@ -1,4 +1,4 @@
-<div class="grid grid--thirds">
+<div class="grid">
   <label class="field">
     <span class="field__label">Country code</span>
     <input
@@ -31,17 +31,5 @@
     <span class="field__hint" *ngIf="form.controls.phoneNumber.touched && form.controls.phoneNumber.hasError('pattern')">
       Use digits only (6-15 digits).
     </span>
-  </label>
-
-  <label class="field">
-    <span class="field__label">Preferred language</span>
-    <select
-      formControlName="preferredLanguage"
-      [class.invalid]="form.controls.preferredLanguage.touched && form.controls.preferredLanguage.invalid"
-    >
-      <option *ngFor="let lang of languageOptions" [value]="lang.value">
-        {{ lang.label }} ({{ lang.value.toUpperCase() }})
-      </option>
-    </select>
   </label>
 </div>

@@ -7,7 +7,6 @@ export type RegisterFormControls = {
   phoneCountryCode: FormControl<string>;
   phoneNumber: FormControl<string>;
   dateOfBirth: FormControl<string>;
-  preferredLanguage: FormControl<string>;
   addressLine1: FormControl<string>;
   addressLine2: FormControl<string>;
   city: FormControl<string>;
@@ -36,14 +35,8 @@ export type CreateUserRequest = {
     postcode: string;
   };
   dateOfBirth: string;
-  preferredLanguage: string;
 };
 
 export type UserResponse = {
   id: string;
-};
-
-export type LanguageOption = {
-  value: string;
-  label: string;
 };

@@ -13,7 +13,7 @@
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="form">
     <app-register-personal-info [form]="registerForm" />
-    <app-register-contact-preferences [form]="registerForm" [languageOptions]="languageOptions" />
+    <app-register-contact-preferences [form]="registerForm" />
     <app-register-address [form]="registerForm" />
     <app-register-security [form]="registerForm" [passwordsMismatch]="passwordsMismatch" />
     <app-register-terms [form]="registerForm" />

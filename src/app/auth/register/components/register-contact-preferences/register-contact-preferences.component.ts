@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LanguageOption, RegisterFormGroup } from '../../register.types';
+import { RegisterFormGroup } from '../../register.types';
 
 @Component({
   selector: 'app-register-contact-preferences',
@@ -11,5 +11,4 @@ import { LanguageOption, RegisterFormGroup } from '../../register.types';
 })
 export class RegisterContactPreferencesComponent {
   @Input({ required: true }) form!: RegisterFormGroup;
-  @Input() languageOptions: LanguageOption[] = [];
 }
