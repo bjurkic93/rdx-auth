@@ -39,46 +39,10 @@
   gap: 1rem;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-
-  @media (min-width: 720px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.grid--thirds {
-  grid-template-columns: 1fr;
-
-  @media (min-width: 720px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 .field {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-
-  &--checkbox {
-    flex-direction: row;
-    align-items: center;
-    gap: 0.5rem;
-    color: @heading;
-
-    input {
-      width: 18px;
-      height: 18px;
-      accent-color: @accent;
-    }
-
-    a {
-      color: @accent;
-      text-decoration: underline;
-    }
-  }
 }
 
 .field__label {
@@ -86,12 +50,8 @@
   color: @heading;
 }
 
-input[type='text'],
 input[type='email'],
-input[type='password'],
-input[type='date'],
-input[type='tel'],
-select {
+input[type='text'] {
   border: 1px solid @border;
   border-radius: 10px;
   padding: 0.75rem 0.85rem;
@@ -118,12 +78,6 @@ select {
   color: @danger;
 }
 
-.section-heading {
-  font-size: 1.1rem;
-  margin: 0.5rem 0 0;
-  color: @heading;
-}
-
 .alert {
   padding: 0.9rem 1rem;
   border-radius: 12px;
@@ -141,14 +95,19 @@ select {
     border-color: fade(@danger, 35%);
     color: darken(@danger, 10%);
   }
+
+  &--muted {
+    background: #f8fafc;
+    border-color: @border;
+    color: @muted;
+  }
 }
 
 .button {
-  align-self: flex-start;
   background: @accent;
   color: #fff;
   font-weight: 700;
-  padding: 0.9rem 1.5rem;
+  padding: 0.9rem 1.25rem;
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -169,14 +128,27 @@ select {
     cursor: not-allowed;
     box-shadow: none;
   }
+
+  &--ghost {
+    background: transparent;
+    color: @heading;
+    border: 1px solid @border;
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      background: #f8fafc;
+      transform: none;
+    }
+  }
 }
 
-.card__footer {
-  margin-top: 0.5rem;
-  color: @muted;
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 
-  a {
-    color: @accent;
-    font-weight: 600;
+  @media (min-width: 480px) {
+    flex-direction: row;
+    align-items: center;
   }
 }
