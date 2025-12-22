@@ -11,6 +11,6 @@ export class EmailService {
   }
 
   verifyEmailCode(email: string, verificationCode: string) {
-    return this.http.post(`${this.apiBaseUrl}/api/v1/users/verifyEmail`, { email, verificationCode });
+    return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/email/verify`, { email, verificationCode });
   }
 }
