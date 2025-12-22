@@ -1,0 +1,62 @@
+<section class="card">
+  <div class="card__header">
+    <h1>Verify your email</h1>
+    <p>Enter the code we sent to your inbox to activate your account.</p>
+  </div>
+
+  <div class="alert alert--success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+  <div class="alert alert--success alert--muted" *ngIf="resendMessage">
+    {{ resendMessage }}
+  </div>
+  <div class="alert alert--error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" novalidate class="form">
+    <label class="field">
+      <span class="field__label">Email</span>
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        [class.invalid]="verificationForm.controls.email.touched && verificationForm.controls.email.invalid"
+      />
+      <span class="field__hint" *ngIf="verificationForm.controls.email.touched && verificationForm.controls.email.hasError('required')">
+        Email is required.
+      </span>
+      <span class="field__hint" *ngIf="verificationForm.controls.email.touched && verificationForm.controls.email.hasError('email')">
+        Enter a valid email address.
+      </span>
+    </label>
+
+    <label class="field">
+      <span class="field__label">Verification code</span>
+      <input
+        type="text"
+        formControlName="verificationCode"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="123456"
+        [class.invalid]="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.invalid"
+      />
+      <span class="field__hint" *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('required')">
+        Verification code is required.
+      </span>
+      <span class="field__hint" *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('pattern')">
+        Enter the digits from your email (4&ndash;8 numbers).
+      </span>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="button" [disabled]="verificationForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Verifying...' : 'Verify email' }}
+      </button>
+      <button type="button" class="button button--ghost" (click)="resendCode()" [disabled]="isResending">
+        {{ isResending ? 'Sending...' : 'Resend code' }}
+      </button>
+    </div>
+  </form>
+</section>
