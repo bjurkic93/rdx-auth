@@ -1,0 +1,101 @@
+<section class="card">
+  <div class="card__header">
+    <h1>Verify your phone</h1>
+    <p>Enter the code we texted you to activate your account.</p>
+  </div>
+
+  <div class="alert alert--success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+  <div class="alert alert--success alert--muted" *ngIf="resendMessage">
+    {{ resendMessage }}
+  </div>
+  <div class="alert alert--error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" novalidate class="form">
+    <div class="field field--inline">
+      <label class="field">
+        <span class="field__label">Country code</span>
+        <input
+          type="text"
+          formControlName="phoneCountryCode"
+          placeholder="+1"
+          autocomplete="tel-country-code"
+          inputmode="tel"
+          [class.invalid]="verificationForm.controls.phoneCountryCode.touched && verificationForm.controls.phoneCountryCode.invalid"
+        />
+        <span
+          class="field__hint"
+          *ngIf="verificationForm.controls.phoneCountryCode.touched && verificationForm.controls.phoneCountryCode.hasError('required')"
+        >
+          Country code is required.
+        </span>
+        <span
+          class="field__hint"
+          *ngIf="verificationForm.controls.phoneCountryCode.touched && verificationForm.controls.phoneCountryCode.hasError('pattern')"
+        >
+          Use the + prefix and digits only.
+        </span>
+      </label>
+
+      <label class="field">
+        <span class="field__label">Phone number</span>
+        <input
+          type="tel"
+          formControlName="phoneNumber"
+          placeholder="2025550175"
+          autocomplete="tel-national"
+          inputmode="tel"
+          [class.invalid]="verificationForm.controls.phoneNumber.touched && verificationForm.controls.phoneNumber.invalid"
+        />
+        <span
+          class="field__hint"
+          *ngIf="verificationForm.controls.phoneNumber.touched && verificationForm.controls.phoneNumber.hasError('required')"
+        >
+          Phone number is required.
+        </span>
+        <span
+          class="field__hint"
+          *ngIf="verificationForm.controls.phoneNumber.touched && verificationForm.controls.phoneNumber.hasError('pattern')"
+        >
+          Enter digits only (6&ndash;15 numbers).
+        </span>
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">Verification code</span>
+      <input
+        type="text"
+        formControlName="verificationCode"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        placeholder="123456"
+        [class.invalid]="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.invalid"
+      />
+      <span
+        class="field__hint"
+        *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('required')"
+      >
+        Verification code is required.
+      </span>
+      <span
+        class="field__hint"
+        *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('pattern')"
+      >
+        Enter the digits from your text (4&ndash;8 numbers).
+      </span>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="button" [disabled]="verificationForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Verifying...' : 'Verify phone' }}
+      </button>
+      <button type="button" class="button button--ghost" (click)="resendCode()" [disabled]="isResending">
+        {{ isResending ? 'Sending...' : 'Resend code' }}
+      </button>
+    </div>
+  </form>
+</section>
