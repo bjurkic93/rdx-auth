@@ -7,6 +7,6 @@ export class EmailService {
   private readonly apiBaseUrl = 'http://localhost:8085';
 
   sendVerificationCode(email: string) {
-    return this.http.post(`${this.apiBaseUrl}/api/v1/users/sendEmailVerificationCode`, { email });
+    return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/email/send`, { email });
   }
 }
