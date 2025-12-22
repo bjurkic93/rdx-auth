@@ -12,8 +12,6 @@ export type RegisterFormControls = {
   city: FormControl<string>;
   country: FormControl<string>;
   postcode: FormControl<string>;
-  password: FormControl<string>;
-  confirmPassword: FormControl<string>;
   termsAccepted: FormControl<boolean>;
 };
 

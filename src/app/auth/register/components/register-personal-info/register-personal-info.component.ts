@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterFormGroup } from '../../register.types';
@@ -5,7 +6,7 @@ import { RegisterFormGroup } from '../../register.types';
 @Component({
   selector: 'app-register-personal-info',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register-personal-info.component.html',
   styleUrl: './register-personal-info.component.less'
 })

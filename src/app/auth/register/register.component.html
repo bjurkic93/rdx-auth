@@ -15,11 +15,13 @@
     <app-register-personal-info [form]="registerForm" />
     <app-register-contact-preferences [form]="registerForm" />
     <app-register-address [form]="registerForm" />
-    <app-register-security [form]="registerForm" [passwordsMismatch]="passwordsMismatch" />
     <app-register-terms [form]="registerForm" />
 
-    <button type="submit" class="button" [disabled]="registerForm.invalid || passwordsMismatch || isSubmitting">
+    <button type="submit" class="button" [disabled]="registerForm.invalid || isSubmitting">
       {{ isSubmitting ? 'Creating account...' : 'Create account' }}
     </button>
+    <div class="alert alert--error" *ngIf="duplicateExistsOpen">
+      {{ duplicateExistsMessage }}
+    </div>
   </form>
 </section>

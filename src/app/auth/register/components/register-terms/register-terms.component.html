@@ -1,9 +1,11 @@
-<label class="field field--checkbox">
-  <input type="checkbox" formControlName="termsAccepted" />
-  <span>
-    I agree to the <a href="#" rel="noopener">Terms of Service</a> and <a href="#" rel="noopener">Privacy Policy</a>.
+<div [formGroup]="form">
+  <label class="field field--checkbox">
+    <input type="checkbox" formControlName="termsAccepted" />
+    <span>
+      I agree to the <a href="#" rel="noopener">Terms of Service</a> and <a href="#" rel="noopener">Privacy Policy</a>.
+    </span>
+  </label>
+  <span class="field__hint" *ngIf="form.controls.termsAccepted.touched && form.controls.termsAccepted.hasError('requiredTrue')">
+    You must accept the terms to continue.
   </span>
-</label>
-<span class="field__hint" *ngIf="form.controls.termsAccepted.touched && form.controls.termsAccepted.hasError('requiredTrue')">
-  You must accept the terms to continue.
-</span>
+</div>

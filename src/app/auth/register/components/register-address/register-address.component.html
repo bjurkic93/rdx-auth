@@ -1,74 +1,76 @@
 <h2 class="section-heading">Address</h2>
-<div class="grid">
-  <label class="field">
-    <span class="field__label">Address line 1</span>
-    <input
-      type="text"
-      formControlName="addressLine1"
-      placeholder="123 Main Street"
-      autocomplete="address-line1"
-      [class.invalid]="form.controls.addressLine1.touched && form.controls.addressLine1.invalid"
-    />
-    <span class="field__hint" *ngIf="form.controls.addressLine1.touched && form.controls.addressLine1.hasError('required')">
-      Address line 1 is required.
-    </span>
-    <span class="field__hint" *ngIf="form.controls.addressLine1.touched && form.controls.addressLine1.hasError('minlength')">
-      Please enter at least 3 characters.
-    </span>
-  </label>
+<div [formGroup]="form">
+  <div class="grid">
+    <label class="field">
+      <span class="field__label">Address line 1</span>
+      <input
+        type="text"
+        formControlName="addressLine1"
+        placeholder="123 Main Street"
+        autocomplete="address-line1"
+        [class.invalid]="form.controls.addressLine1.touched && form.controls.addressLine1.invalid"
+      />
+      <span class="field__hint" *ngIf="form.controls.addressLine1.touched && form.controls.addressLine1.hasError('required')">
+        Address line 1 is required.
+      </span>
+      <span class="field__hint" *ngIf="form.controls.addressLine1.touched && form.controls.addressLine1.hasError('minlength')">
+        Please enter at least 3 characters.
+      </span>
+    </label>
 
-  <label class="field">
-    <span class="field__label">Address line 2 (optional)</span>
-    <input
-      type="text"
-      formControlName="addressLine2"
-      placeholder="Apt. 4B"
-      autocomplete="address-line2"
-      [class.invalid]="form.controls.addressLine2.touched && form.controls.addressLine2.invalid"
-    />
-  </label>
-</div>
+    <label class="field">
+      <span class="field__label">Address line 2 (optional)</span>
+      <input
+        type="text"
+        formControlName="addressLine2"
+        placeholder="Apt. 4B"
+        autocomplete="address-line2"
+        [class.invalid]="form.controls.addressLine2.touched && form.controls.addressLine2.invalid"
+      />
+    </label>
+  </div>
 
-<div class="grid grid--thirds">
-  <label class="field">
-    <span class="field__label">City</span>
-    <input
-      type="text"
-      formControlName="city"
-      placeholder="New York"
-      autocomplete="address-level2"
-      [class.invalid]="form.controls.city.touched && form.controls.city.invalid"
-    />
-    <span class="field__hint" *ngIf="form.controls.city.touched && form.controls.city.hasError('required')">
-      City is required.
-    </span>
-  </label>
+  <div class="grid grid--thirds">
+    <label class="field">
+      <span class="field__label">City</span>
+      <input
+        type="text"
+        formControlName="city"
+        placeholder="New York"
+        autocomplete="address-level2"
+        [class.invalid]="form.controls.city.touched && form.controls.city.invalid"
+      />
+      <span class="field__hint" *ngIf="form.controls.city.touched && form.controls.city.hasError('required')">
+        City is required.
+      </span>
+    </label>
 
-  <label class="field">
-    <span class="field__label">Country</span>
-    <input
-      type="text"
-      formControlName="country"
-      placeholder="United States"
-      autocomplete="country-name"
-      [class.invalid]="form.controls.country.touched && form.controls.country.invalid"
-    />
-    <span class="field__hint" *ngIf="form.controls.country.touched && form.controls.country.hasError('required')">
-      Country is required.
-    </span>
-  </label>
+    <label class="field">
+      <span class="field__label">Country</span>
+      <input
+        type="text"
+        formControlName="country"
+        placeholder="United States"
+        autocomplete="country-name"
+        [class.invalid]="form.controls.country.touched && form.controls.country.invalid"
+      />
+      <span class="field__hint" *ngIf="form.controls.country.touched && form.controls.country.hasError('required')">
+        Country is required.
+      </span>
+    </label>
 
-  <label class="field">
-    <span class="field__label">Postal code</span>
-    <input
-      type="text"
-      formControlName="postcode"
-      placeholder="10001"
-      autocomplete="postal-code"
-      [class.invalid]="form.controls.postcode.touched && form.controls.postcode.invalid"
-    />
-    <span class="field__hint" *ngIf="form.controls.postcode.touched && form.controls.postcode.hasError('required')">
-      Postal code is required.
-    </span>
-  </label>
+    <label class="field">
+      <span class="field__label">Postal code</span>
+      <input
+        type="text"
+        formControlName="postcode"
+        placeholder="10001"
+        autocomplete="postal-code"
+        [class.invalid]="form.controls.postcode.touched && form.controls.postcode.invalid"
+      />
+      <span class="field__hint" *ngIf="form.controls.postcode.touched && form.controls.postcode.hasError('required')">
+        Postal code is required.
+      </span>
+    </label>
+  </div>
 </div>

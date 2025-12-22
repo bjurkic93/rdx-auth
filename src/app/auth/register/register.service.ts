@@ -1,24 +1,20 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, switchMap } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { CreateUserRequest, UserResponse } from './register.types';
 
 @Injectable({ providedIn: 'root' })
 export class RegisterService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'https://secret-earth-49998-b5c7e6fe39d1.herokuapp.com';
+  private readonly apiBaseUrl = 'http://localhost:8085';
 
   readonly emptyResult = EMPTY;
 
-  register(payload: CreateUserRequest, password: string) {
-    return this.http
-      .post<UserResponse>(`${this.apiBaseUrl}/api/v1/users`, payload)
-      .pipe(
-        switchMap((user) =>
-          this.http.post(`${this.apiBaseUrl}/api/v1/users/${user.id}/password`, {
-            password
-          })
-        )
-      );
+  register(payload: CreateUserRequest) {
+    return this.http.post<UserResponse>(`${this.apiBaseUrl}/api/v1/users`, payload);
+  }
+
+  sendEmailValidation(userId: string) {
+    return this.http.post(`${this.apiBaseUrl}/api/v1/users/${userId}/verification/email/send`, {});
   }
 }

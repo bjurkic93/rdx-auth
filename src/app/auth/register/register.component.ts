@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { catchError, finalize, tap } from 'rxjs';
+import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
 import { RegisterAddressComponent } from './components/register-address/register-address.component';
 import { RegisterContactPreferencesComponent } from './components/register-contact-preferences/register-contact-preferences.component';
 import { RegisterPersonalInfoComponent } from './components/register-personal-info/register-personal-info.component';
-import { RegisterSecurityComponent } from './components/register-security/register-security.component';
 import { RegisterTermsComponent } from './components/register-terms/register-terms.component';
 import { CreateUserRequest, RegisterFormGroup } from './register.types';
 
@@ -19,7 +18,6 @@ import { CreateUserRequest, RegisterFormGroup } from './register.types';
     RegisterPersonalInfoComponent,
     RegisterContactPreferencesComponent,
     RegisterAddressComponent,
-    RegisterSecurityComponent,
     RegisterTermsComponent
   ],
   templateUrl: './register.component.html',
@@ -32,6 +30,8 @@ export class RegisterComponent {
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
+  duplicateExistsOpen = false;
+  duplicateExistsMessage = 'This contact already exists. Please use a different one.';
 
   readonly registerForm: RegisterFormGroup = this.fb.nonNullable.group({
     firstName: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(2)]),
@@ -45,25 +45,15 @@ export class RegisterComponent {
     city: this.fb.nonNullable.control('', [Validators.required]),
     country: this.fb.nonNullable.control('', [Validators.required]),
     postcode: this.fb.nonNullable.control('', [Validators.required]),
-    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
-    confirmPassword: this.fb.nonNullable.control('', [Validators.required]),
     termsAccepted: this.fb.control(false, { validators: [Validators.requiredTrue], nonNullable: true })
   });
-
-  get passwordsMismatch(): boolean {
-    const { password, confirmPassword } = this.registerForm.controls;
-    return (
-      password.touched &&
-      confirmPassword.touched &&
-      password.value !== confirmPassword.value
-    );
-  }
 
   onSubmit(): void {
     this.successMessage = '';
     this.errorMessage = '';
+    this.duplicateExistsOpen = false;
 
-    if (this.registerForm.invalid || this.passwordsMismatch) {
+    if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;
     }
@@ -91,15 +81,23 @@ export class RegisterComponent {
     this.isSubmitting = true;
 
     this.registerService
-      .register(createUserPayload, formValue.password)
+      .register(createUserPayload)
       .pipe(
+        switchMap((user) => this.registerService.sendEmailValidation(user.id)),
         tap(() => {
-          this.successMessage = 'Account created successfully. Check your inbox for verification steps.';
+          this.successMessage = 'Account created. Check your email to validate your address.';
           this.registerForm.reset({
             termsAccepted: false
           });
         }),
         catchError((error) => {
+          const errorCode = error?.error?.errorCode;
+          if (errorCode === 'PHONE_ALREADY_EXISTS' || errorCode === 'EMAIL_ALREADY_EXISTS') {
+            this.duplicateExistsOpen = true;
+            this.duplicateExistsMessage = error?.error?.errorMessage ?? this.duplicateExistsMessage;
+            return this.registerService.emptyResult;
+          }
+
           const message =
             error?.error?.message ??
             'We could not complete your registration right now. Please review your details and try again.';
