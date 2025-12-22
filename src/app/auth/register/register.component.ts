@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
 import { EmailService } from './email.service';
@@ -16,6 +17,7 @@ import { CreateUserRequest, RegisterFormGroup } from './register.types';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
     RegisterPersonalInfoComponent,
     RegisterContactPreferencesComponent,
     RegisterAddressComponent,

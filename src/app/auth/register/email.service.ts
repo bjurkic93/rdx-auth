@@ -9,4 +9,8 @@ export class EmailService {
   sendVerificationCode(email: string) {
     return this.http.post(`${this.apiBaseUrl}/api/v1/users/sendEmailVerificationCode`, { email });
   }
+
+  verifyEmailCode(email: string, verificationCode: string) {
+    return this.http.post(`${this.apiBaseUrl}/api/v1/users/verifyEmail`, { email, verificationCode });
+  }
 }
