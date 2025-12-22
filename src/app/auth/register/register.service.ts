@@ -13,8 +13,4 @@ export class RegisterService {
   register(payload: CreateUserRequest) {
     return this.http.post<UserResponse>(`${this.apiBaseUrl}/api/v1/users`, payload);
   }
-
-  sendEmailValidation(userId: string) {
-    return this.http.post(`${this.apiBaseUrl}/api/v1/users/${userId}/verification/email/send`, {});
-  }
 }

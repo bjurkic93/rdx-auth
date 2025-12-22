@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
+import { EmailService } from './email.service';
 import { RegisterAddressComponent } from './components/register-address/register-address.component';
 import { RegisterContactPreferencesComponent } from './components/register-contact-preferences/register-contact-preferences.component';
 import { RegisterPersonalInfoComponent } from './components/register-personal-info/register-personal-info.component';
@@ -26,6 +27,7 @@ import { CreateUserRequest, RegisterFormGroup } from './register.types';
 export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly registerService = inject(RegisterService);
+  private readonly emailService = inject(EmailService);
 
   isSubmitting = false;
   successMessage = '';
@@ -83,7 +85,7 @@ export class RegisterComponent {
     this.registerService
       .register(createUserPayload)
       .pipe(
-        switchMap((user) => this.registerService.sendEmailValidation(user.id)),
+        switchMap(() => this.emailService.sendVerificationCode(createUserPayload.email)),
         tap(() => {
           this.successMessage = 'Account created. Check your email to validate your address.';
           this.registerForm.reset({
