@@ -21,7 +21,6 @@ export class CreatePasswordComponent implements OnInit {
   private readonly authTokenService = inject(AuthTokenService);
 
   email = '';
-  verificationToken = '';
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
@@ -34,9 +33,8 @@ export class CreatePasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.email = this.route.snapshot.queryParamMap.get('email') ?? '';
-    this.verificationToken = this.route.snapshot.queryParamMap.get('token') ?? '';
 
-    if (!this.verificationToken || !this.email) {
+    if (!this.email) {
       this.errorMessage = 'Your verification link is missing details. Please verify your email again.';
     }
   }
@@ -51,7 +49,7 @@ export class CreatePasswordComponent implements OnInit {
       return;
     }
 
-    if (!this.email || !this.verificationToken) {
+    if (!this.email) {
       this.errorMessage = 'Verification details expired. Please restart email verification.';
       return;
     }
@@ -67,8 +65,7 @@ export class CreatePasswordComponent implements OnInit {
     this.createPasswordService
       .createPassword({
         email: this.email,
-        password,
-        verificationToken: this.verificationToken
+        password
       })
       .pipe(
         finalize(() => {
