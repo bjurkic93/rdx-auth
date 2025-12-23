@@ -1,0 +1,23 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export type CreatePasswordRequest = {
+  email: string;
+  password: string;
+  verificationToken: string;
+};
+
+export type CreatePasswordResponse = {
+  token: string;
+};
+
+@Injectable({ providedIn: 'root' })
+export class CreatePasswordService {
+  private readonly http = inject(HttpClient);
+  private readonly apiBaseUrl = 'http://localhost:8085';
+
+  createPassword(payload: CreatePasswordRequest): Observable<CreatePasswordResponse> {
+    return this.http.post<CreatePasswordResponse>(`${this.apiBaseUrl}/api/v1/users/password`, payload);
+  }
+}

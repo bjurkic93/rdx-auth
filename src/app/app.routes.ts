@@ -3,12 +3,17 @@ import { RegisterComponent } from './auth/register/register.component';
 import { EmailVerificationComponent } from './auth/email-verification/email-verification.component';
 import { PhoneVerificationComponent } from './auth/phone-verification/phone-verification.component';
 import { LoginComponent } from './auth/login/login.component';
+import { CreatePasswordComponent } from './auth/create-password/create-password.component';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
     redirectTo: 'register'
+  },
+  {
+    path: 'create-password',
+    component: CreatePasswordComponent
   },
   {
     path: 'register',
