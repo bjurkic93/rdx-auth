@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { EmailService } from '../register/email.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-verification',
@@ -16,6 +16,7 @@ export class EmailVerificationComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly emailService = inject(EmailService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   isSubmitting = false;
   isResending = false;
@@ -61,7 +62,12 @@ export class EmailVerificationComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.successMessage = 'Email verified successfully. You can now sign in.';
+          const message = 'Email verified successfully. You can now sign in.';
+          this.successMessage = message;
+          void this.router.navigate(['/login'], {
+            queryParams: { email },
+            state: { verifiedMessage: message }
+          });
           this.verificationForm.reset();
         },
         error: (error) => {
