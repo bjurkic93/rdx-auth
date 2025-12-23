@@ -61,17 +61,11 @@ export class EmailVerificationComponent implements OnInit {
         })
       )
       .subscribe({
-        next: ({ token }) => {
-          if (!token) {
-            this.errorMessage =
-              'We verified your email, but need to restart the flow to set your password. Please try again.';
-            return;
-          }
-
+        next: () => {
           const message = 'Email verified successfully. Create your password to finish signing up.';
           this.successMessage = message;
           void this.router.navigate(['/create-password'], {
-            queryParams: { email, token }
+            queryParams: { email }
           });
           this.verificationForm.reset();
         },

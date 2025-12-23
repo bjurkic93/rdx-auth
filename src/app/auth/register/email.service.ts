@@ -2,10 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export type EmailVerificationResponse = {
-  token: string;
-};
-
 @Injectable({ providedIn: 'root' })
 export class EmailService {
   private readonly http = inject(HttpClient);
@@ -15,8 +11,8 @@ export class EmailService {
     return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/email/send`, { email });
   }
 
-  verifyEmailCode(email: string, verificationCode: string): Observable<EmailVerificationResponse> {
-    return this.http.post<EmailVerificationResponse>(`${this.apiBaseUrl}/api/v1/users/verification/email/verify`, {
+  verifyEmailCode(email: string, verificationCode: string): Observable<void> {
+    return this.http.post<void>(`${this.apiBaseUrl}/api/v1/users/verification/email/verify`, {
       email,
       verificationCode
     });

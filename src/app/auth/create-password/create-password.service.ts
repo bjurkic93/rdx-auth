@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 export type CreatePasswordRequest = {
   email: string;
   password: string;
-  verificationToken: string;
 };
 
 export type CreatePasswordResponse = {
