@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
 import { EmailService } from './email.service';
+import { UserContextService } from '../user-context.service';
 import { RegisterAddressComponent } from './components/register-address/register-address.component';
 import { RegisterContactPreferencesComponent } from './components/register-contact-preferences/register-contact-preferences.component';
 import { RegisterPersonalInfoComponent } from './components/register-personal-info/register-personal-info.component';
@@ -30,6 +31,7 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly registerService = inject(RegisterService);
   private readonly emailService = inject(EmailService);
+  private readonly userContextService = inject(UserContextService);
   private readonly router = inject(Router);
 
   isSubmitting = false;
@@ -88,7 +90,10 @@ export class RegisterComponent {
     this.registerService
       .register(createUserPayload)
       .pipe(
-        switchMap(() => this.emailService.sendVerificationCode(createUserPayload.email)),
+        switchMap((userResponse) => {
+          this.userContextService.storeUserId(userResponse.id);
+          return this.emailService.sendVerificationCode(createUserPayload.email);
+        }),
         tap(() => {
           this.successMessage = 'Account created. Check your email to validate your address.';
           this.registerForm.reset({

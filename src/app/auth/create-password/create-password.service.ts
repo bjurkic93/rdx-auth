@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export type CreatePasswordRequest = {
   email: string;
+  userId: string;
   password: string;
 };
 
