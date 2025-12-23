@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { EmailService } from '../register/email.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-email-verification',
@@ -11,9 +12,10 @@ import { EmailService } from '../register/email.service';
   templateUrl: './email-verification.component.html',
   styleUrl: './email-verification.component.less'
 })
-export class EmailVerificationComponent {
+export class EmailVerificationComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly emailService = inject(EmailService);
+  private readonly route = inject(ActivatedRoute);
 
   isSubmitting = false;
   isResending = false;
@@ -28,6 +30,13 @@ export class EmailVerificationComponent {
       Validators.pattern(/^[0-9]{4,8}$/)
     ])
   });
+
+  ngOnInit(): void {
+    const emailFromQuery = this.route.snapshot.queryParamMap.get('email');
+    if (emailFromQuery) {
+      this.verificationForm.controls.email.setValue(emailFromQuery);
+    }
+  }
 
   onSubmit(): void {
     this.successMessage = '';
