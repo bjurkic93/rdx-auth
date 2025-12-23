@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthTokenService } from '../auth-token.service';
 import { CreatePasswordService } from './create-password.service';
+import { UserContextService } from '../user-context.service';
 
 @Component({
   selector: 'app-create-password',
@@ -19,8 +20,10 @@ export class CreatePasswordComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly createPasswordService = inject(CreatePasswordService);
   private readonly authTokenService = inject(AuthTokenService);
+  private readonly userContextService = inject(UserContextService);
 
   email = '';
+  userId = '';
   isSubmitting = false;
   successMessage = '';
   errorMessage = '';
@@ -33,9 +36,11 @@ export class CreatePasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.email = this.route.snapshot.queryParamMap.get('email') ?? '';
+    this.userId = this.userContextService.getUserId() ?? '';
 
-    if (!this.email) {
-      this.errorMessage = 'Your verification link is missing details. Please verify your email again.';
+    if (!this.email || !this.userId) {
+      this.errorMessage =
+        'Your verification link is missing details. Please verify your email again.';
     }
   }
 
@@ -49,7 +54,7 @@ export class CreatePasswordComponent implements OnInit {
       return;
     }
 
-    if (!this.email) {
+    if (!this.email || !this.userId) {
       this.errorMessage = 'Verification details expired. Please restart email verification.';
       return;
     }
@@ -65,6 +70,7 @@ export class CreatePasswordComponent implements OnInit {
     this.createPasswordService
       .createPassword({
         email: this.email,
+        userId: this.userId,
         password
       })
       .pipe(
@@ -81,6 +87,7 @@ export class CreatePasswordComponent implements OnInit {
           }
 
           this.authTokenService.storeToken(token);
+          this.userContextService.clearUserId();
 
           const message = 'Password created successfully. You can now sign in.';
           this.successMessage = message;
