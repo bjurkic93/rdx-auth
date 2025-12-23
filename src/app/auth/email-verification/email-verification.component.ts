@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 import { EmailService } from '../register/email.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-email-verification',
@@ -61,12 +61,17 @@ export class EmailVerificationComponent implements OnInit {
         })
       )
       .subscribe({
-        next: () => {
-          const message = 'Email verified successfully. You can now sign in.';
+        next: ({ token }) => {
+          if (!token) {
+            this.errorMessage =
+              'We verified your email, but need to restart the flow to set your password. Please try again.';
+            return;
+          }
+
+          const message = 'Email verified successfully. Create your password to finish signing up.';
           this.successMessage = message;
-          void this.router.navigate(['/login'], {
-            queryParams: { email },
-            state: { verifiedMessage: message }
+          void this.router.navigate(['/create-password'], {
+            queryParams: { email, token }
           });
           this.verificationForm.reset();
         },
