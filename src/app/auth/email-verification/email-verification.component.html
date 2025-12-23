@@ -1,7 +1,7 @@
 <section class="card">
   <div class="card__header">
-    <h1>Verify your email</h1>
-    <p>Enter the code we sent to your inbox to activate your account.</p>
+    <h1>Verify your email &amp; create a password</h1>
+    <p>Enter the code we sent to your inbox, then choose a password to finish setting up your account.</p>
   </div>
 
   <div class="alert alert--success" *ngIf="successMessage">
@@ -50,9 +50,43 @@
       </span>
     </label>
 
+    <label class="field">
+      <span class="field__label">Password</span>
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="••••••••"
+        autocomplete="new-password"
+        [class.invalid]="verificationForm.controls.password.touched && verificationForm.controls.password.invalid"
+      />
+      <span class="field__hint" *ngIf="verificationForm.controls.password.touched && verificationForm.controls.password.hasError('required')">
+        Password is required.
+      </span>
+      <span class="field__hint" *ngIf="verificationForm.controls.password.touched && verificationForm.controls.password.hasError('minlength')">
+        Password must be at least 8 characters.
+      </span>
+    </label>
+
+    <label class="field">
+      <span class="field__label">Confirm password</span>
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="••••••••"
+        autocomplete="new-password"
+        [class.invalid]="(verificationForm.controls.confirmPassword.touched && verificationForm.controls.confirmPassword.invalid) || passwordsMismatch"
+      />
+      <span class="field__hint" *ngIf="verificationForm.controls.confirmPassword.touched && verificationForm.controls.confirmPassword.hasError('required')">
+        Please confirm your password.
+      </span>
+      <span class="field__hint" *ngIf="passwordsMismatch">
+        Passwords must match.
+      </span>
+    </label>
+
     <div class="actions">
-      <button type="submit" class="button" [disabled]="verificationForm.invalid || isSubmitting">
-        {{ isSubmitting ? 'Verifying...' : 'Verify email' }}
+      <button type="submit" class="button" [disabled]="verificationForm.invalid || passwordsMismatch || isSubmitting">
+        {{ isSubmitting ? 'Creating password...' : 'Create password' }}
       </button>
       <button type="button" class="button button--ghost" (click)="resendCode()" [disabled]="isResending">
         {{ isResending ? 'Sending...' : 'Resend code' }}

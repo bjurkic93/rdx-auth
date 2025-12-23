@@ -29,8 +29,20 @@ export class EmailVerificationComponent implements OnInit {
     verificationCode: this.fb.nonNullable.control('', [
       Validators.required,
       Validators.pattern(/^[0-9]{4,8}$/)
-    ])
+    ]),
+    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(8)]),
+    confirmPassword: this.fb.nonNullable.control('', [Validators.required])
   });
+
+  get passwordsMismatch(): boolean {
+    const { password, confirmPassword } = this.verificationForm.controls;
+    return confirmPassword.touched && password.value !== confirmPassword.value;
+  }
+
+  markPasswordsAsTouched(): void {
+    this.verificationForm.controls.password.markAsTouched();
+    this.verificationForm.controls.confirmPassword.markAsTouched();
+  }
 
   ngOnInit(): void {
     const emailFromQuery = this.route.snapshot.queryParamMap.get('email');
@@ -44,36 +56,37 @@ export class EmailVerificationComponent implements OnInit {
     this.errorMessage = '';
     this.resendMessage = '';
 
-    if (this.verificationForm.invalid) {
+    if (this.verificationForm.invalid || this.passwordsMismatch) {
       this.verificationForm.markAllAsTouched();
+      this.markPasswordsAsTouched();
       return;
     }
 
-    const { email, verificationCode } = this.verificationForm.getRawValue();
+    const { email, verificationCode, password } = this.verificationForm.getRawValue();
 
     this.isSubmitting = true;
 
     this.emailService
-      .verifyEmailCode(email, verificationCode)
+      .createPassword(email, verificationCode, password)
       .pipe(
         finalize(() => {
           this.isSubmitting = false;
         })
       )
       .subscribe({
-        next: () => {
-          const message = 'Email verified successfully. You can now sign in.';
-          this.successMessage = message;
+        next: ({ token }) => {
+          const message = 'Password created successfully. You can now sign in.';
+          this.successMessage = `${message} Copy your token for your records: ${token}`;
           void this.router.navigate(['/login'], {
             queryParams: { email },
-            state: { verifiedMessage: message }
+            state: { verifiedMessage: `${message} Token: ${token}` }
           });
           this.verificationForm.reset();
         },
         error: (error) => {
           const message =
             error?.error?.message ??
-            'We could not verify your email right now. Please check the code and try again.';
+            'We could not create your password right now. Please check the code and try again.';
           this.errorMessage = message;
         }
       });

@@ -6,6 +6,14 @@ export class EmailService {
   private readonly http = inject(HttpClient);
   private readonly apiBaseUrl = 'http://localhost:8085';
 
+  createPassword(email: string, verificationCode: string, password: string) {
+    return this.http.post<CreatePasswordResponse>(`${this.apiBaseUrl}/api/v1/users/password`, {
+      email,
+      verificationCode,
+      password
+    });
+  }
+
   sendVerificationCode(email: string) {
     return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/email/send`, { email });
   }
@@ -14,3 +22,7 @@ export class EmailService {
     return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/email/verify`, { email, verificationCode });
   }
 }
+
+export type CreatePasswordResponse = {
+  token: string;
+};
