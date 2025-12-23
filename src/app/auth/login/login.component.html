@@ -1,0 +1,63 @@
+<section class="card">
+  <div class="card__header">
+    <h1>Sign in to RDX Auth</h1>
+    <p>Use your verified email to access your account.</p>
+  </div>
+
+  <div class="alert alert--success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+  <div class="alert alert--error" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="form">
+    <label class="field">
+      <span class="field__label">Email</span>
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        [class.invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+      />
+      <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('required')">
+        Email is required.
+      </span>
+      <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('email')">
+        Enter a valid email address.
+      </span>
+    </label>
+
+    <label class="field">
+      <span class="field__label">Password</span>
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        [class.invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+      />
+      <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('required')">
+        Password is required.
+      </span>
+      <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('minlength')">
+        Password must be at least 8 characters.
+      </span>
+    </label>
+
+    <label class="field field--inline">
+      <input type="checkbox" formControlName="rememberMe" />
+      <span class="field__label">Remember this device</span>
+    </label>
+
+    <button type="submit" class="button" [disabled]="loginForm.invalid || isSubmitting">
+      {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
+    </button>
+  </form>
+
+  <p class="card__footer">
+    Don't have an account?
+    <a routerLink="/register">Create one</a>.
+  </p>
+</section>
