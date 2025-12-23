@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
 import { EmailService } from './email.service';
@@ -30,6 +30,7 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly registerService = inject(RegisterService);
   private readonly emailService = inject(EmailService);
+  private readonly router = inject(Router);
 
   isSubmitting = false;
   successMessage = '';
@@ -92,6 +93,9 @@ export class RegisterComponent {
           this.successMessage = 'Account created. Check your email to validate your address.';
           this.registerForm.reset({
             termsAccepted: false
+          });
+          void this.router.navigate(['/verify-email'], {
+            queryParams: { email: createUserPayload.email }
           });
         }),
         catchError((error) => {
