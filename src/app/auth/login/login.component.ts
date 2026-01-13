@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+import { AuthTokenService } from '../auth-token.service';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +16,8 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 export class LoginComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
+  private readonly loginService = inject(LoginService);
+  private readonly authTokenService = inject(AuthTokenService);
 
   isSubmitting = false;
   successMessage = '';
@@ -47,9 +52,27 @@ export class LoginComponent implements OnInit {
 
     this.isSubmitting = true;
 
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.successMessage = 'Signed in successfully. Replace this with your auth integration.';
-    }, 600);
+    const { email, password } = this.loginForm.getRawValue();
+
+    this.loginService
+      .login({ email, password })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false;
+        })
+      )
+      .subscribe({
+        next: ({ token }) => {
+          if (token) {
+            this.authTokenService.storeToken(token);
+          }
+          this.successMessage = 'Signed in successfully.';
+        },
+        error: (error) => {
+          const message =
+            error?.error?.message ?? 'We could not sign you in right now. Please try again.';
+          this.errorMessage = message;
+        }
+      });
   }
 }
