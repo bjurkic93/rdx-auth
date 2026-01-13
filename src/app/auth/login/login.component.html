@@ -1,63 +1,88 @@
-<section class="card">
-  <div class="card__header">
-    <h1>Sign in to RDX Auth</h1>
-    <p>Use your verified email to access your account.</p>
-  </div>
-
-  <div class="alert alert--success" *ngIf="successMessage">
-    {{ successMessage }}
-  </div>
-  <div class="alert alert--error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="form">
-    <label class="field">
-      <span class="field__label">Email</span>
-      <input
-        type="email"
-        formControlName="email"
-        placeholder="you@example.com"
-        autocomplete="email"
-        [class.invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+<section class="login">
+  <div class="login__card">
+    <header class="login__header">
+      <img
+        class="login__logo"
+        src="https://static.wixstatic.com/media/39eefc_626500717c344fe8969174cc515e68d4~mv2.png/v1/fill/w_211,h_50,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/rdx-logo-final.png"
+        alt="RDX"
       />
-      <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('required')">
-        Email is required.
-      </span>
-      <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('email')">
-        Enter a valid email address.
-      </span>
-    </label>
+      <div>
+        <h1>Welcome back</h1>
+        <p>Sign in to manage your RDX Auth workspace.</p>
+      </div>
+    </header>
 
-    <label class="field">
-      <span class="field__label">Password</span>
-      <input
-        type="password"
-        formControlName="password"
-        placeholder="••••••••"
-        autocomplete="current-password"
-        [class.invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
-      />
-      <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('required')">
-        Password is required.
-      </span>
-      <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('minlength')">
-        Password must be at least 8 characters.
-      </span>
-    </label>
+    <div class="alert alert--success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+    <div class="alert alert--error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
 
-    <label class="field field--inline">
-      <input type="checkbox" formControlName="rememberMe" />
-      <span class="field__label">Remember this device</span>
-    </label>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="form">
+      <label class="field">
+        <span class="field__label">Email</span>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          [class.invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid"
+        />
+        <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('required')">
+          Email is required.
+        </span>
+        <span class="field__hint" *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('email')">
+          Enter a valid email address.
+        </span>
+      </label>
 
-    <button type="submit" class="button" [disabled]="loginForm.invalid || isSubmitting">
-      {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
-    </button>
-  </form>
+      <label class="field">
+        <span class="field__label">Password</span>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          [class.invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid"
+        />
+        <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('required')">
+          Password is required.
+        </span>
+        <span class="field__hint" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('minlength')">
+          Password must be at least 8 characters.
+        </span>
+      </label>
 
-  <p class="card__footer">
-    Don't have an account?
-    <a routerLink="/register">Create one</a>.
-  </p>
+      <label class="field field--inline">
+        <input type="checkbox" formControlName="rememberMe" />
+        <span class="field__label">Remember this device</span>
+      </label>
+
+      <button type="submit" class="button" [disabled]="loginForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <p class="card__footer">
+      Don't have an account?
+      <a routerLink="/register">Create one</a>.
+    </p>
+  </div>
+
+  <aside class="login__panel">
+    <div class="panel__content">
+      <span class="panel__eyebrow">RDX Auth</span>
+      <h2>Secure access, bold identity.</h2>
+      <p>
+        Built for teams that want simple access control with a high-impact brand experience. Keep your users safe while
+        staying unmistakably RDX.
+      </p>
+      <ul>
+        <li>Modern, red-forward identity</li>
+        <li>Device trust reminders</li>
+        <li>Clear alerts and feedback</li>
+      </ul>
+    </div>
+  </aside>
 </section>
