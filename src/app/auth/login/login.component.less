@@ -4,8 +4,6 @@
 @background: #ffffff;
 @accent: #dc2626;
 @danger: #ef4444;
-@panel-dark: #0b0b0f;
-@panel-red: #b91c1c;
 
 :host {
   display: block;
@@ -13,18 +11,11 @@
 
 .login {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 2rem;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 2.5rem 1.5rem 3rem;
   background: radial-gradient(circle at top, fade(@accent, 10%), #f8fafc 55%, #f1f5f9 100%);
-
-  @media (min-width: 900px) {
-    grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
-    padding: 3.5rem 5vw;
-  }
 }
 
 .login__card {
@@ -171,52 +162,4 @@ input[type='password'] {
       text-decoration: underline;
     }
   }
-}
-
-.login__panel {
-  display: none;
-
-  @media (min-width: 900px) {
-    display: block;
-    border-radius: 28px;
-    padding: 2.75rem;
-    min-height: 520px;
-    color: #f8fafc;
-    background: linear-gradient(135deg, @panel-dark 10%, #111827 55%, @panel-red 100%);
-    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
-  }
-}
-
-.panel__content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  h2 {
-    font-size: 2.1rem;
-    margin: 0;
-    letter-spacing: -0.02em;
-  }
-
-  p {
-    margin: 0;
-    color: fade(#f8fafc, 80%);
-    line-height: 1.6;
-  }
-
-  ul {
-    margin: 0;
-    padding-left: 1.2rem;
-    color: fade(#f8fafc, 85%);
-    display: grid;
-    gap: 0.6rem;
-  }
-}
-
-.panel__eyebrow {
-  text-transform: uppercase;
-  letter-spacing: 0.3em;
-  font-size: 0.75rem;
-  color: fade(#f87171, 80%);
-  font-weight: 600;
 }
