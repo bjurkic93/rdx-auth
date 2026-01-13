@@ -9,5 +9,4 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.less'
 })
 export class AppComponent {
-  readonly appTitle = 'RDX Auth';
 }
