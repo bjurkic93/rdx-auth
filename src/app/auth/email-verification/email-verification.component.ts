@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
@@ -18,18 +18,23 @@ export class EmailVerificationComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
+  @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef<HTMLInputElement>>;
+
   isSubmitting = false;
   isResending = false;
   successMessage = '';
   errorMessage = '';
   resendMessage = '';
+  codeInvalid = false;
 
   readonly verificationForm = this.fb.nonNullable.group({
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
-    verificationCode: this.fb.nonNullable.control('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]{4,8}$/)
-    ])
+    digit0: this.fb.nonNullable.control(''),
+    digit1: this.fb.nonNullable.control(''),
+    digit2: this.fb.nonNullable.control(''),
+    digit3: this.fb.nonNullable.control(''),
+    digit4: this.fb.nonNullable.control(''),
+    digit5: this.fb.nonNullable.control('')
   });
 
   ngOnInit(): void {
@@ -39,17 +44,100 @@ export class EmailVerificationComponent implements OnInit {
     }
   }
 
+  get verificationCode(): string {
+    const { digit0, digit1, digit2, digit3, digit4, digit5 } = this.verificationForm.getRawValue();
+    return `${digit0}${digit1}${digit2}${digit3}${digit4}${digit5}`;
+  }
+
+  get isCodeComplete(): boolean {
+    return this.verificationCode.length === 6 && /^[0-9]{6}$/.test(this.verificationCode);
+  }
+
+  private readonly digitControls = [
+    () => this.verificationForm.controls.digit0,
+    () => this.verificationForm.controls.digit1,
+    () => this.verificationForm.controls.digit2,
+    () => this.verificationForm.controls.digit3,
+    () => this.verificationForm.controls.digit4,
+    () => this.verificationForm.controls.digit5
+  ];
+
+  onDigitInput(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    // Only allow single digit
+    if (value.length > 1) {
+      input.value = value.slice(-1);
+      this.digitControls[index]().setValue(value.slice(-1));
+    }
+
+    // Auto-focus next input
+    if (value && index < 5) {
+      const inputs = this.codeInputs.toArray();
+      inputs[index + 1]?.nativeElement.focus();
+    }
+
+    this.codeInvalid = false;
+  }
+
+  onDigitKeydown(event: KeyboardEvent, index: number): void {
+    const input = event.target as HTMLInputElement;
+
+    // Handle backspace - go to previous input if current is empty
+    if (event.key === 'Backspace' && !input.value && index > 0) {
+      const inputs = this.codeInputs.toArray();
+      inputs[index - 1]?.nativeElement.focus();
+    }
+
+    // Handle arrow keys
+    if (event.key === 'ArrowLeft' && index > 0) {
+      const inputs = this.codeInputs.toArray();
+      inputs[index - 1]?.nativeElement.focus();
+    }
+    if (event.key === 'ArrowRight' && index < 5) {
+      const inputs = this.codeInputs.toArray();
+      inputs[index + 1]?.nativeElement.focus();
+    }
+  }
+
+  onDigitPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const pastedData = event.clipboardData?.getData('text') || '';
+    const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+
+    const inputs = this.codeInputs.toArray();
+    digits.split('').forEach((digit, i) => {
+      if (i < this.digitControls.length) {
+        this.digitControls[i]().setValue(digit);
+      }
+      if (inputs[i]) {
+        inputs[i].nativeElement.value = digit;
+      }
+    });
+
+    // Focus last filled input or the next empty one
+    const focusIndex = Math.min(digits.length, 5);
+    inputs[focusIndex]?.nativeElement.focus();
+  }
+
   onSubmit(): void {
     this.successMessage = '';
     this.errorMessage = '';
     this.resendMessage = '';
 
-    if (this.verificationForm.invalid) {
-      this.verificationForm.markAllAsTouched();
+    if (this.verificationForm.controls.email.invalid) {
+      this.verificationForm.controls.email.markAsTouched();
       return;
     }
 
-    const { email, verificationCode } = this.verificationForm.getRawValue();
+    if (!this.isCodeComplete) {
+      this.codeInvalid = true;
+      return;
+    }
+
+    const email = this.verificationForm.controls.email.value;
+    const verificationCode = this.verificationCode;
 
     this.isSubmitting = true;
 
@@ -74,6 +162,7 @@ export class EmailVerificationComponent implements OnInit {
             error?.error?.message ??
             'We could not verify your email right now. Please check the code and try again.';
           this.errorMessage = message;
+          this.codeInvalid = true;
         }
       });
   }

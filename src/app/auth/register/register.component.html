@@ -1,34 +1,36 @@
-<section class="card">
-  <div class="card__header">
-    <h1>Create your account</h1>
-    <p>Start securing your sessions with a dedicated profile.</p>
-  </div>
+<section class="register">
+  <div class="register__card">
+    <header class="register__header">
+      <img
+        class="register__logo"
+        src="https://static.wixstatic.com/media/39eefc_626500717c344fe8969174cc515e68d4~mv2.png/v1/fill/w_211,h_50,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/rdx-logo-final.png"
+        alt="RDX"
+      />
+      <div>
+        <h1>Create your account</h1>
+        <p>Start securing your sessions with a dedicated profile.</p>
+      </div>
+    </header>
 
-  <div class="alert alert--success" *ngIf="successMessage">
-    {{ successMessage }}
-  </div>
-  <div class="alert alert--error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="form">
-    <app-register-personal-info [form]="registerForm" />
-    <app-register-contact-preferences [form]="registerForm" />
-    <app-register-address [form]="registerForm" />
-    <app-register-terms [form]="registerForm" />
-
-    <button type="submit" class="button" [disabled]="registerForm.invalid || isSubmitting">
-      {{ isSubmitting ? 'Creating account...' : 'Create account' }}
-    </button>
+    <div class="alert alert--success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+    <div class="alert alert--error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
     <div class="alert alert--error" *ngIf="duplicateExistsOpen">
       {{ duplicateExistsMessage }}
     </div>
-  </form>
 
-  <p class="card__footer">
-    Already have a verification code?
-    <a routerLink="/verify-email">Verify your email</a>
-    or
-    <a routerLink="/verify-phone">Verify your phone</a>
-  </p>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="form">
+      <app-register-personal-info [form]="registerForm" />
+      <app-register-contact-preferences [form]="registerForm" />
+      <app-register-terms [form]="registerForm" />
+
+      <button type="submit" class="button" [disabled]="registerForm.invalid || isSubmitting">
+        {{ isSubmitting ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+  </div>
 </section>

@@ -70,9 +70,8 @@ export class CreatePasswordComponent implements OnInit {
     this.createPasswordService
       .createPassword({
         email: this.email,
-        userId: this.userId,
         password
-      })
+      }, this.userId)
       .pipe(
         finalize(() => {
           this.isSubmitting = false;

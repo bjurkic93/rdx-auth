@@ -1,20 +1,46 @@
 <div [formGroup]="form" class="grid">
-  <label class="field">
+  <div class="field" #dropdownContainer>
     <span class="field__label">Country code</span>
-    <input
-      type="text"
-      formControlName="phoneCountryCode"
-      placeholder="+1"
-      autocomplete="tel-country-code"
-      [class.invalid]="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.invalid"
-    />
+    <div class="country-select" [class.country-select--invalid]="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.invalid">
+      <img
+        *ngIf="selectedCountry"
+        class="country-select__flag"
+        [src]="getFlagUrl(selectedCountry.iso)"
+        [alt]="selectedCountry.name"
+      />
+      <input
+        type="text"
+        class="country-input"
+        [class.country-input--has-flag]="selectedCountry"
+        [value]="displayValue"
+        (input)="onInputChange($event)"
+        (focus)="onInputFocus()"
+        placeholder="Search country..."
+        autocomplete="off"
+      />
+      <span class="country-select__arrow">▾</span>
+    </div>
+    <input type="hidden" formControlName="phoneCountryCode" />
+    
+    <div class="dropdown" *ngIf="isDropdownOpen && filteredCountries.length > 0">
+      <div
+        class="dropdown__item"
+        *ngFor="let country of filteredCountries"
+        (click)="selectCountry(country)"
+      >
+        <img class="dropdown__flag" [src]="getFlagUrl(country.iso)" [alt]="country.name" />
+        <span class="dropdown__name">{{ country.name }}</span>
+        <span class="dropdown__code">{{ country.code }}</span>
+      </div>
+    </div>
+    
     <span class="field__hint" *ngIf="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.hasError('required')">
       Country code is required.
     </span>
     <span class="field__hint" *ngIf="form.controls.phoneCountryCode.touched && form.controls.phoneCountryCode.hasError('pattern')">
-      Use a plus sign followed by 1-4 digits.
+      Please select a valid country code.
     </span>
-  </label>
+  </div>
 
   <label class="field">
     <span class="field__label">Phone number</span>
@@ -23,6 +49,7 @@
       formControlName="phoneNumber"
       placeholder="2025550123"
       autocomplete="tel-national"
+      (input)="onPhoneNumberInput($event)"
       [class.invalid]="form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid"
     />
     <span class="field__hint" *ngIf="form.controls.phoneNumber.touched && form.controls.phoneNumber.hasError('required')">

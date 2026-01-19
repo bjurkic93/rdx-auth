@@ -6,7 +6,6 @@ import { catchError, finalize, switchMap, tap } from 'rxjs';
 import { RegisterService } from './register.service';
 import { EmailService } from './email.service';
 import { UserContextService } from '../user-context.service';
-import { RegisterAddressComponent } from './components/register-address/register-address.component';
 import { RegisterContactPreferencesComponent } from './components/register-contact-preferences/register-contact-preferences.component';
 import { RegisterPersonalInfoComponent } from './components/register-personal-info/register-personal-info.component';
 import { RegisterTermsComponent } from './components/register-terms/register-terms.component';
@@ -21,7 +20,6 @@ import { CreateUserRequest, RegisterFormGroup } from './register.types';
     RouterLink,
     RegisterPersonalInfoComponent,
     RegisterContactPreferencesComponent,
-    RegisterAddressComponent,
     RegisterTermsComponent
   ],
   templateUrl: './register.component.html',
@@ -47,11 +45,6 @@ export class RegisterComponent {
     phoneCountryCode: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^[+][0-9]{1,4}$/)]),
     phoneNumber: this.fb.nonNullable.control('', [Validators.required, Validators.pattern(/^[0-9]{6,15}$/)]),
     dateOfBirth: this.fb.nonNullable.control('', [Validators.required]),
-    addressLine1: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
-    addressLine2: this.fb.nonNullable.control(''),
-    city: this.fb.nonNullable.control('', [Validators.required]),
-    country: this.fb.nonNullable.control('', [Validators.required]),
-    postcode: this.fb.nonNullable.control('', [Validators.required]),
     termsAccepted: this.fb.control(false, { validators: [Validators.requiredTrue], nonNullable: true })
   });
 
@@ -74,13 +67,6 @@ export class RegisterComponent {
       phoneNumber: {
         countryCode: formValue.phoneCountryCode,
         number: formValue.phoneNumber
-      },
-      address: {
-        country: formValue.country,
-        city: formValue.city,
-        addressLine1: formValue.addressLine1,
-        addressLine2: formValue.addressLine2 || undefined,
-        postcode: formValue.postcode
       },
       dateOfBirth: formValue.dateOfBirth
     };

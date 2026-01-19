@@ -1,62 +1,119 @@
-<section class="card">
-  <div class="card__header">
-    <h1>Verify your email</h1>
-    <p>Enter the code we sent to your inbox to activate your account.</p>
-  </div>
-
-  <div class="alert alert--success" *ngIf="successMessage">
-    {{ successMessage }}
-  </div>
-  <div class="alert alert--success alert--muted" *ngIf="resendMessage">
-    {{ resendMessage }}
-  </div>
-  <div class="alert alert--error" *ngIf="errorMessage">
-    {{ errorMessage }}
-  </div>
-
-  <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" novalidate class="form">
-    <label class="field">
-      <span class="field__label">Email</span>
-      <input
-        type="email"
-        formControlName="email"
-        placeholder="you@example.com"
-        autocomplete="email"
-        [class.invalid]="verificationForm.controls.email.touched && verificationForm.controls.email.invalid"
+<section class="verify">
+  <div class="verify__card">
+    <header class="verify__header">
+      <img
+        class="verify__logo"
+        src="https://static.wixstatic.com/media/39eefc_626500717c344fe8969174cc515e68d4~mv2.png/v1/fill/w_211,h_50,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/rdx-logo-final.png"
+        alt="RDX"
       />
-      <span class="field__hint" *ngIf="verificationForm.controls.email.touched && verificationForm.controls.email.hasError('required')">
-        Email is required.
-      </span>
-      <span class="field__hint" *ngIf="verificationForm.controls.email.touched && verificationForm.controls.email.hasError('email')">
-        Enter a valid email address.
-      </span>
-    </label>
+      <div>
+        <h1>Verify your email</h1>
+        <p>Enter the 6-digit code we sent to your inbox.</p>
+      </div>
+    </header>
 
-    <label class="field">
-      <span class="field__label">Verification code</span>
-      <input
-        type="text"
-        formControlName="verificationCode"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        placeholder="123456"
-        [class.invalid]="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.invalid"
-      />
-      <span class="field__hint" *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('required')">
-        Verification code is required.
-      </span>
-      <span class="field__hint" *ngIf="verificationForm.controls.verificationCode.touched && verificationForm.controls.verificationCode.hasError('pattern')">
-        Enter the digits from your email (4&ndash;8 numbers).
-      </span>
-    </label>
-
-    <div class="actions">
-      <button type="submit" class="button" [disabled]="verificationForm.invalid || isSubmitting">
-        {{ isSubmitting ? 'Verifying...' : 'Verify email' }}
-      </button>
-      <button type="button" class="button button--ghost" (click)="resendCode()" [disabled]="isResending">
-        {{ isResending ? 'Sending...' : 'Resend code' }}
-      </button>
+    <div class="alert alert--success" *ngIf="successMessage">
+      {{ successMessage }}
     </div>
-  </form>
+    <div class="alert alert--muted" *ngIf="resendMessage">
+      {{ resendMessage }}
+    </div>
+    <div class="alert alert--error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <p class="email-info" *ngIf="verificationForm.controls.email.value">
+      Code sent to <strong>{{ verificationForm.controls.email.value }}</strong>
+    </p>
+
+    <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" novalidate class="form">
+      <div class="field">
+        <span class="field__label">Verification code</span>
+        <div class="code-inputs" [class.code-inputs--invalid]="codeInvalid">
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit0"
+            (input)="onDigitInput($event, 0)"
+            (keydown)="onDigitKeydown($event, 0)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit1"
+            (input)="onDigitInput($event, 1)"
+            (keydown)="onDigitKeydown($event, 1)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit2"
+            (input)="onDigitInput($event, 2)"
+            (keydown)="onDigitKeydown($event, 2)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit3"
+            (input)="onDigitInput($event, 3)"
+            (keydown)="onDigitKeydown($event, 3)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit4"
+            (input)="onDigitInput($event, 4)"
+            (keydown)="onDigitKeydown($event, 4)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+          <input
+            #codeInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            formControlName="digit5"
+            (input)="onDigitInput($event, 5)"
+            (keydown)="onDigitKeydown($event, 5)"
+            (paste)="onDigitPaste($event)"
+            class="code-input"
+          />
+        </div>
+        <span class="field__hint" *ngIf="codeInvalid">
+          Please enter the complete 6-digit code.
+        </span>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="button" [disabled]="verificationForm.controls.email.invalid || !isCodeComplete || isSubmitting">
+          {{ isSubmitting ? 'Verifying...' : 'Verify email' }}
+        </button>
+        <button type="button" class="button button--ghost" (click)="resendCode()" [disabled]="isResending">
+          {{ isResending ? 'Sending...' : 'Resend code' }}
+        </button>
+      </div>
+    </form>
+
+    <p class="verify__footer">
+      Back to <a routerLink="/login">Sign in</a>
+    </p>
+  </div>
 </section>
