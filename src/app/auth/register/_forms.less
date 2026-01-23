@@ -1,0 +1,87 @@
+// Shared form styles for register components
+@import './_variables.less';
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  &--checkbox {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    color: @heading;
+
+    input {
+      width: 18px;
+      height: 18px;
+      accent-color: @accent;
+    }
+
+    a {
+      color: @accent;
+      text-decoration: underline;
+    }
+  }
+}
+
+.field__label {
+  font-weight: 600;
+  color: @heading;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+input[type='tel'],
+select {
+  border: 1px solid fade(@border, 30%);
+  border-radius: 12px;
+  padding: 0.8rem 0.95rem;
+  font-size: 1rem;
+  background: #f8fafc;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+  &:focus {
+    outline: none;
+    border-color: @accent;
+    box-shadow: 0 0 0 4px fade(@accent, 18%);
+    background: #fff;
+  }
+
+  &.invalid {
+    border-color: @danger;
+    box-shadow: 0 0 0 4px fade(@danger, 14%);
+    background: #fff5f5;
+  }
+}
+
+.field__hint {
+  font-size: 0.9rem;
+  color: @danger;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 720px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.grid--thirds {
+  grid-template-columns: 1fr;
+
+  @media (min-width: 720px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.section-heading {
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+  color: @heading;
+}
