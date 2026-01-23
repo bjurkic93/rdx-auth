@@ -9,7 +9,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'register'
+    redirectTo: 'login'
   },
   {
     path: 'create-password',
@@ -30,5 +30,9 @@ export const routes: Routes = [
   {
     path: 'verify-phone',
     component: PhoneVerificationComponent
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];
