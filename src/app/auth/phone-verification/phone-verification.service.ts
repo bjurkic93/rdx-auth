@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PhoneVerificationService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'http://localhost:8085';
+  private readonly apiBaseUrl = environment.apiBaseUrl;
 
   sendVerificationCode(phoneCountryCode: string, phoneNumber: string) {
     return this.http.post(`${this.apiBaseUrl}/api/v1/users/verification/phone/send`, {
