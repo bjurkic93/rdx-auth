@@ -39,7 +39,9 @@ export class LoginComponent implements OnInit {
     }
 
     // Get return URL from query params (allows override from external apps)
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    // Support both 'returnUrl' and OAuth2 standard 'redirect_uri'
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') 
+                   || this.route.snapshot.queryParamMap.get('redirect_uri');
     if (returnUrl) {
       this.returnUrl = returnUrl;
     }
