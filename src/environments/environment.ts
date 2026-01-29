@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8085',
-  authServerUrl: 'http://localhost:8086',
-  // URL to redirect after successful login
-  postLoginRedirectUrl: 'http://localhost:4200'
+  apiBaseUrl: 'https://auth.reddia-x.com',
+  authServerUrl: 'https://auth.reddia-x.com',
+  // URL to redirect after successful login (not used anymore - redirect_uri comes from OAuth2 params)
+  postLoginRedirectUrl: 'https://cms.reddia-x.com'
 };
