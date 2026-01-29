@@ -3,8 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
-import { LoginService } from './login.service';
-import { environment } from '../../../environments/environment';
+import { LoginService, AuthorizeRequest } from './login.service';
 
 @Component({
   selector: 'app-login',
@@ -22,8 +21,13 @@ export class LoginComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   
-  // External redirect URL (e.g., rdx-video-cms)
-  returnUrl = environment.postLoginRedirectUrl;
+  // OAuth2 parameters from query string
+  private clientId = '';
+  private redirectUri = '';
+  private scope = 'openid profile email';
+  private state = '';
+  private codeChallenge = '';
+  private codeChallengeMethod = '';
 
   readonly loginForm = this.fb.nonNullable.group({
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
@@ -32,18 +36,25 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // Get email from query params (e.g., after registration)
-    const emailFromQuery = this.route.snapshot.queryParamMap.get('email');
-    if (emailFromQuery) {
-      this.loginForm.controls.email.setValue(emailFromQuery);
+    const queryParams = this.route.snapshot.queryParamMap;
+    
+    // Get OAuth2 parameters from query string
+    this.clientId = queryParams.get('client_id') || '';
+    this.redirectUri = queryParams.get('redirect_uri') || '';
+    this.scope = queryParams.get('scope') || 'openid profile email';
+    this.state = queryParams.get('state') || '';
+    this.codeChallenge = queryParams.get('code_challenge') || '';
+    this.codeChallengeMethod = queryParams.get('code_challenge_method') || '';
+
+    // Validate required OAuth2 parameters
+    if (!this.clientId || !this.redirectUri) {
+      this.errorMessage = 'Missing required OAuth2 parameters (client_id, redirect_uri)';
     }
 
-    // Get return URL from query params (allows override from external apps)
-    // Support both 'returnUrl' and OAuth2 standard 'redirect_uri'
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') 
-                   || this.route.snapshot.queryParamMap.get('redirect_uri');
-    if (returnUrl) {
-      this.returnUrl = returnUrl;
+    // Get email from query params (e.g., after registration)
+    const emailFromQuery = queryParams.get('email');
+    if (emailFromQuery) {
+      this.loginForm.controls.email.setValue(emailFromQuery);
     }
 
     // Show verification success message from state
@@ -53,7 +64,7 @@ export class LoginComponent implements OnInit {
     }
 
     // Show session expired error from query params
-    const error = this.route.snapshot.queryParamMap.get('error');
+    const error = queryParams.get('error');
     if (error === 'session_expired') {
       this.errorMessage = 'Your session has expired. Please sign in again.';
     }
@@ -68,12 +79,30 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    // Validate OAuth2 parameters
+    if (!this.clientId || !this.redirectUri) {
+      this.errorMessage = 'Missing required OAuth2 parameters';
+      return;
+    }
+
     this.isSubmitting = true;
 
     const { email, password } = this.loginForm.getRawValue();
 
+    const authorizeRequest: AuthorizeRequest = {
+      email,
+      password,
+      responseType: 'code',
+      clientId: this.clientId,
+      redirectUri: this.redirectUri,
+      scope: this.scope,
+      state: this.state,
+      codeChallenge: this.codeChallenge || undefined,
+      codeChallengeMethod: this.codeChallengeMethod || undefined
+    };
+
     this.loginService
-      .login({ email, password })
+      .authorize(authorizeRequest)
       .pipe(
         finalize(() => {
           this.isSubmitting = false;
@@ -81,14 +110,9 @@ export class LoginComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          if (response.success && response.accessToken) {
-            // Redirect to external app with token in URL fragment
-            // Using fragment (#) instead of query param for security (not sent to server)
-            const redirectUrl = this.buildRedirectUrl(response.accessToken, response.refreshToken);
-            window.location.href = redirectUrl;
-          } else {
-            this.errorMessage = response.message || 'Login failed. Please try again.';
-          }
+          // Redirect to client with authorization code
+          const redirectUrl = this.buildRedirectUrl(response.code, response.state);
+          window.location.href = redirectUrl;
         },
         error: (error) => {
           const message =
@@ -99,24 +123,14 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Build redirect URL with tokens in hash fragment.
-   * Redirects to the /callback route which handles token storage.
+   * Build redirect URL with authorization code.
    */
-  private buildRedirectUrl(accessToken: string, refreshToken: string): string {
-    // Parse the returnUrl to get the base
-    let baseUrl = this.returnUrl.split('#')[0].split('?')[0]; // Remove fragment and query
-    
-    // Ensure we redirect to the /callback route
-    if (!baseUrl.endsWith('/callback')) {
-      // Remove trailing slash if present
-      baseUrl = baseUrl.replace(/\/$/, '');
-      baseUrl = `${baseUrl}/callback`;
+  private buildRedirectUrl(code: string, state: string): string {
+    const url = new URL(this.redirectUri);
+    url.searchParams.set('code', code);
+    if (state) {
+      url.searchParams.set('state', state);
     }
-    
-    const tokenData = encodeURIComponent(JSON.stringify({
-      accessToken,
-      refreshToken
-    }));
-    return `${baseUrl}#token=${tokenData}`;
+    return url.toString();
   }
 }

@@ -31,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   // Endpoints that should not trigger token refresh on 401
   private readonly noRefreshUrls = [
-    '/auth/login',
+    '/auth/authorize',
     '/auth/refresh',
     '/auth/logout'
   ];
